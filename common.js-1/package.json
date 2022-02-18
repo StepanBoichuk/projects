@@ -1,0 +1,15 @@
+{
+  "name": "common.js-1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start" : "node index.js",
+    "start:dev" : "node --inspect-brk index.js"
+  },
+  "author": "Stepan Boichuk",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2"
+  }
+}
