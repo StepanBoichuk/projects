@@ -1,17 +1,15 @@
 const chalk = require("chalk")
 
-const info = (product, version) => {
-    console.log(chalk.green("Вы успешно обновили " + product + " До версии " + version))
+const info = (mes) => {
+    console.log(chalk.green(mes))
 }
 
-const warn = (symbol, line) => {
-    console.log(chalk.yellow("Пропущен " + symbol + " на линии " + line))
+const warn = (mes) => {
+    console.log(chalk.yellow(mes))
 }
 
-const error = (nickname, isindatabase) => {
-    if (isindatabase == true) {
-        console.log(chalk.red("Ошибка! Никнейм " + nickname + " уже занят"))
-    }
+const error = (mes) => {
+        console.log(chalk.red(mes))
 }
 
 module.exports = {
