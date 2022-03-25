@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start" : "node index.js",
-    "start:dev" : "node --inspect-brk index.js"
+    "start": "node index.js",
+    "start:dev": "node --inspect-brk index.js"
   },
   "author": "Stepan Boichuk",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^4.1.2"
+    "chalk": "^4.1.2",
+    "yargs": "^17.4.0"
   }
 }

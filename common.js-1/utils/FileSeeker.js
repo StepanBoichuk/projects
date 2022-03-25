@@ -1,9 +1,10 @@
 const EventEmitter = require('events');
 const fs = require('fs')
-const path = require ('path')
+const path = require('path')
+const yargs = require('yargs')
 
+const argv = yargs(process.argv).argv
 const myEmitter = new EventEmitter();
-
 
 async function seek (target, dirPath) {
     fs.readdir(dirPath, (err, files) => {
@@ -23,4 +24,13 @@ async function seek (target, dirPath) {
       })
 };
 
-module.exports = {seek, myEmitter}
+const verbose = (data, eventName) => {
+  if(argv.verbose){
+      const res = `[${new Date().toLocaleTimeString()}][${eventName}] ${data} \n`
+      fs.writeFile('./events.log', res, { flag: 'a+'}, err => {
+        console.error(err)
+   })
+  }
+}
+
+module.exports = {seek, myEmitter, verbose}
