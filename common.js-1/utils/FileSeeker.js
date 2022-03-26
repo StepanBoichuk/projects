@@ -25,12 +25,10 @@ async function seek (target, dirPath) {
 };
 
 const verbose = (data, eventName) => {
-  if(argv.verbose){
       const res = `[${new Date().toLocaleTimeString()}][${eventName}] ${data} \n`
       fs.writeFile('./events.log', res, { flag: 'a+'}, err => {
         console.error(err)
-   })
-  }
+      })
 }
 
 module.exports = {seek, myEmitter, verbose}
