@@ -12,14 +12,18 @@ const verbose = seekModule.verbose
 seekModule.myEmitter.on('fall', () => {
     const mes = 'File not found'
     logger.error(mes);
-    verbose(mes, 'fall')
+    if (argv.verbose) {
+        verbose(mes, 'fall')
+    }
 })
 
 seekModule.myEmitter.on('success', (arg1) => {
     const mes = 'File found ' + arg1
     logger.info(mes);
-    verbose(mes, 'success')
+    if (argv.verbose) {
+        verbose(mes, 'success')
+    }
 });
 
 
-seekModule.seek(argv.file, path.dirname(process.argv[1]))           // --file=
+seekModule.seek(argv.file, path.dirname(process.argv[1]))
