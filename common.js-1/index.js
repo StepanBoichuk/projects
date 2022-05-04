@@ -1,17 +1,18 @@
-const logger = require('./utils/logger')
-const path = require('path')
-const seekModule = require('./utils/FileSeeker')
-const yargs = require("yargs")
-const http = require('http')
-const fs = require('fs')
+const logger = require('./utils/logger');
+const path = require('path');
+const seekModule = require('./utils/FileSeeker');
+const yargs = require("yargs");
+const http = require('http');
+const fs = require('fs');
+const express = require('express');
+const homeRouter = require('./api/home/controller')
 
 //logger.info("Это сообщение будет зеленым цветом")
 //logger.warn("Это сообщение будет желтым цветом")
 //logger.error("Это сообщение будет красным цветом")
-const argv = yargs(process.argv).argv
-const verbose = seekModule.verbose
-const PORT = 3000;
-const server = http.createServer();
+const argv = yargs(process.argv).argv;
+const verbose = seekModule.verbose;
+const app = express();
 
 seekModule.myEmitter.on('fall', () => {
     const mes = 'File not found'
@@ -19,7 +20,7 @@ seekModule.myEmitter.on('fall', () => {
     if (argv.verbose) {
         verbose(mes, 'fall')
     }
-})
+});
 
 seekModule.myEmitter.on('success', (arg1) => {
     const mes = 'File found ' + arg1
@@ -29,20 +30,11 @@ seekModule.myEmitter.on('success', (arg1) => {
     }
 });
 
-seekModule.seek(argv.file, path.dirname(process.argv[1]))
-
-server.on('request', (req, res) => {
-    if (req.url == '/'){
-        fs.createReadStream('index.html').pipe(res);
-    }else if (req.url == '/favicon.ico'){
-        fs.createReadStream('./favicon.ico').pipe(res)
-    }else{
-        res.destroy()
-    }
-    verbose('requested', req.url)
-})
+seekModule.seek(argv.file, path.dirname(process.argv[1]));
 
 
-server.listen(PORT, () => {
-    console.log(`Server is listening localhost:${PORT}`)
+app.use('/', homeRouter);
+
+app.listen(3000, () => {
+    console.log('Listening on PORT 3000');
 });
