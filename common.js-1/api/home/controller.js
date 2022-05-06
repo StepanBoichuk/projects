@@ -2,9 +2,11 @@ const { Router } = require('express');
 const fs = require('fs');
 const path = require('path');
 const dataProvider = require('../../services/itemProvider')
+const bodyParser = require('body-parser');
 
 const homeRouter = Router();
 const filePath = path.join('public', 'data', 'TODOlist.json');
+
 
 homeRouter.get('/', (req, res) => {
     let temp = '';
@@ -26,22 +28,17 @@ homeRouter.get('/', (req, res) => {
     });
 });
 
-homeRouter.post('/', (req, res) => {
-    let body = '';
 
-    req.on('data', data => {
-        body += data;
-    });
+const urlencodeParser = bodyParser.urlencoded({ extended: true })
 
-    req.on('end', () => {
-        const item = body.replace('itemValue=', '');
+homeRouter.post('/', urlencodeParser, function (req, res) {    
+        // const item = req.body.itemValue;
         const template = {
-            value: item,
+            value: req.body.itemValue,
             date: new Date().toLocaleTimeString()
         };
         dataProvider.setData(filePath, template);
         res.redirect('/');
-    });
 });
 
 
