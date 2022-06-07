@@ -2,6 +2,9 @@
 <html lang="en">
 <%- include('./../partials/head.ejs', {title: "Sign up"}) %>
 <body>
+    <% if (error) {%>
+    <strong style="color: red"><%- error %></strong>
+    <%}%> 
     <h1>Введите ваши данные:</h1>
     <form action="/signup" method="post">
         <div><input type="email" name="email" placeholder="Email"></div>

@@ -32,7 +32,6 @@ homeRouter.get('/', (req, res) => {
 const urlencodeParser = bodyParser.urlencoded({ extended: true })
 
 homeRouter.post('/', urlencodeParser, function (req, res) {    
-        // const item = req.body.itemValue;
         const template = {
             value: req.body.itemValue,
             date: new Date().toLocaleTimeString()

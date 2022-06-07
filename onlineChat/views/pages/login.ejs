@@ -2,7 +2,11 @@
 <html lang="en">
 <%- include('./../partials/head.ejs', {title: "Sign in"}) %>
 <body>
+    
     <h3>Введите логин и пароль</h3>
+    <% if (error) {%>
+    <strong style="color: red"><%- error %></strong>
+    <%}%>
     
     <form action="/login" method="post">
         <div><input type="text" name="username" placeholder="Логин"><div>

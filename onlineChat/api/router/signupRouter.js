@@ -1,28 +1,23 @@
 const { Router } = require("express");
 const path = require("path");
 const signup = require("../../services/signup");
+const signupValidation = require('../../validation/signup.validation');
 
 const authRouter = Router();
 
 authRouter.get("/signup", (req, res) => {
-    res.render(path.join(__dirname, "..", "..", "views", "pages", "signup"));
+    res.render(path.join(__dirname, "..", "..", "views", "pages", "signup"), { error: ''});
 });
 
-authRouter.post("/signup", async (req, res) => {
-  const data = {
-    username: req.body.username.trim(),
-    email: req.body.email,
-    birth_date: req.body.birth_date,
-    password: req.body.password,
-    repeat_password: req.body.repeat_password,
-  };
-  const result = await signup(data);
-  if (result.error) {
-    res.send(result.message);
+authRouter.post('/signup', signupValidation.appValidator, (req, res) => {
+  const { error } = req.validation;
+  if (error) {
+    res.render(path.join(__dirname, "..", "..", "views", "pages", "signup"), { error });
   } else {
+    signup(req.body);
     req.session.auth = true;
     res.redirect("/");
-  }
+  };
 });
 
 module.exports = authRouter;
