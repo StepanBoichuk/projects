@@ -21,6 +21,7 @@ app.use(session({
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use("/assets", express.static(path.join("public", "assets")));
 
@@ -31,7 +32,7 @@ app.use("/", (req, res) => {
 });
 
 app.use('/logout', (req, res) => {
-    res.session.destroy();
+    req.session.destroy();
     res.redirect('/');
 });
 
