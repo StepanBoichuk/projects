@@ -1,0 +1,9 @@
+<div style="display: flex;" >
+    <% if (!auth) { %>
+    <a href="/login" style="margin-right: 15px">Sign in</a>
+    <a href="/signup">Sign up</a>
+    <% } else { %>
+    <a href="/logout">Exit</a>
+    <h1>Welcome, <%=username%></h1>
+    <% } %>
+</div>

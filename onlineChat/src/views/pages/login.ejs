@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./../partials/head.ejs', {title: "Sign in"}) %>
+<body>
+    <a href="/users">Back</a>
+    <h3>Please, enter your email and password</h3>
+    <% if (error) {%>
+    <strong style="color: red"><%- error %></strong>
+    <%}%>
+    <% if (message) {%>
+    <strong style="color: red"><%- message.message %></strong>
+    <%}%>
+    
+
+    <form action="/login" method="post">
+        <div><input type="text" name="email" placeholder="Email"><div>
+        <div><input type="password" name="password"placeholder="Password"></div>
+        <div><input type="submit" value="Sign in"></div>
+    </form>
+</body>
+</html>

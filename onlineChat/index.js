@@ -1,43 +1,83 @@
 const express = require("express");
 const config = require("config");
-const signupRouter = require("./api/router/signupRouter");
-const usersRouter = require("./api/router/usersRouter");
-const loginRouter = require("./api/router/loginRouter");
+const signupRouter = require("./src/app/router/signupRouter");
+const usersRouter = require("./src/app/router/usersRouter");
+const loginRouter = require("./src/app/router/loginRouter");
+const usersAPI = require('./src/api/endpoints/users');
+const loginAPI = require('./src/api/endpoints/login');
+const signupAPI = require('./src/api/endpoints/signup');
+const chatsAPI = require('./src/api/endpoints/chats');
+const verifyAPI = require('./src/api/endpoints/verify')
 const path = require("path");
 const bodyParser = require("body-parser");
-const session = require('express-session');
+const session = require("express-session");
+const mongoose = require("mongoose");
+const { createClient } = require('redis');
+const passport = require('passport');
+const { errors } = require('celebrate');
 
 
-const app = express();
+const { passportStrategies } = require('./src/services')
 
-app.set("view engine", "ejs");
-app.set('trust proxy', 1);
+  const app = express();
 
-app.use(session({
-  secret: config.get('sessionSecret'),
-  resave: false,
-  saveUninitialized: true,
-}));
+  passport.use(passportStrategies.local);
+
+  app.locals = {
+    error: '',
+    message: ''
+  };
+
+  app.set("view engine", "ejs");
+  app.set("trust proxy", 1);
+
+  app.use(session({
+    secret: config.get("sessionSecret"),
+    resave: false,
+    saveUninitialized: true,
+  }));
+
+  const redisConnect = async () => {
+    const client = createClient({
+      url: 'redis://redis:6379'
+    });
+    client.on('error', err => console.log('Redis Client Error', err));
+    await client.connect();
+  };
+
+  redisConnect();
+
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
 
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+  app.use("/assets", express.static(path.join("public", "assets")));
 
-app.use("/assets", express.static(path.join("public", "assets")));
+  app.use("/", signupRouter, loginRouter, usersRouter);
+  app.use("/", usersAPI, loginAPI, signupAPI, chatsAPI, verifyAPI);
 
-app.use("/", signupRouter, loginRouter, usersRouter);
+  app.get("/", (req, res) => {
+    res.redirect("/users");
+  });
 
-app.use("/", (req, res) => {
-  res.redirect("/users");
-});
+  app.use("/logout", (req, res) => {
+      req.session.destroy();
+      res.redirect('/users')
+      
+  });
 
-app.use('/logout', (req, res) => {
-    req.session.destroy();
-    res.redirect('/');
-});
+  app.use(errors())
+  app.use((req, res, next) => {
+    res.locals = {
+      auth: !!req.session.user
+    };
+    next()
+  });
 
-app.listen(config.get("server.port"), () => {
-  console.log(
-    `Server is running on http://localhost:${config.get("server.port")}`
-  );
-});
+  mongoose.connect(config.get("db.connectionString")).then(() => {
+    app.listen(config.get("server.port"), () => {
+      console.log(
+        `Server is running on http://localhost:${config.get("server.port")}`
+      );
+    });  
+  });
