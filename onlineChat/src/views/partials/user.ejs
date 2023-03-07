@@ -1,0 +1,9 @@
+<% if (!auth) { %>
+    <h2>
+        <%=user%>
+    </h2>
+<% } else { %>
+    <h2>
+        <%=user%> <h5>Enter chat with <%=user%></h5>
+    </h2>
+<% } %>
