@@ -7,6 +7,6 @@ const login = async (email, password) => {
         delete user.password;
         return user;
     };
-    return void null;
 };
+
 module.exports = login;

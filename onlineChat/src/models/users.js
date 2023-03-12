@@ -12,11 +12,11 @@ const UserSchema = new Schema({
     },
     birth_date: {
         type: SchemaTypes.Date,
-        required: true
+        required: false
     },
     password: {
         type: SchemaTypes.String,
-        required: true
+        required: false
     },
     verified: {
         type: SchemaTypes.Boolean,

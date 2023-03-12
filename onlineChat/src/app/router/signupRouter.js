@@ -6,7 +6,7 @@ const signupValidation = require('../../validation/signup.validation');
 const authRouter = Router();
 
 authRouter.get("/signup", (req, res) => {
-  const { auth } = req.session;
+  const auth  = req.user;
   if (!auth) {
     res.render(path.join(__dirname, "..", "..", "views", "pages", "signup"), { error: ''});
   } else {
@@ -24,7 +24,7 @@ authRouter.post('/signup', signupValidation.appValidator, async (req, res) => {
       res.redirect('/');
     }catch (e) {
       if(e.code == '11000') {
-        const error = `Username ${req.body.username} is already exist`
+        const error = `Email ${req.body.email} is already exist`
         res.render(path.join(__dirname, "..", "..", "views", "pages", "signup"), {error})
       }
     };
