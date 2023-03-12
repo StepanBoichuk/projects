@@ -3,6 +3,7 @@ const config = require("config");
 const signupRouter = require("./src/app/router/signupRouter");
 const usersRouter = require("./src/app/router/usersRouter");
 const loginRouter = require("./src/app/router/loginRouter");
+const oauthRouter = require('./src/services/oauth2');
 const usersAPI = require('./src/api/endpoints/users');
 const loginAPI = require('./src/api/endpoints/login');
 const signupAPI = require('./src/api/endpoints/signup');
@@ -22,6 +23,7 @@ const { passportStrategies } = require('./src/services')
   const app = express();
 
   passport.use(passportStrategies.local);
+  passport.use(passportStrategies.google);
 
   app.locals = {
     error: '',
@@ -34,8 +36,9 @@ const { passportStrategies } = require('./src/services')
   app.use(session({
     secret: config.get("sessionSecret"),
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
   }));
+  app.use(passport.authenticate('session'));
 
   const redisConnect = async () => {
     const client = createClient({
@@ -53,7 +56,7 @@ const { passportStrategies } = require('./src/services')
 
   app.use("/assets", express.static(path.join("public", "assets")));
 
-  app.use("/", signupRouter, loginRouter, usersRouter);
+  app.use("/", signupRouter, loginRouter, usersRouter, oauthRouter);
   app.use("/", usersAPI, loginAPI, signupAPI, chatsAPI, verifyAPI);
 
   app.get("/", (req, res) => {
@@ -69,7 +72,7 @@ const { passportStrategies } = require('./src/services')
   app.use(errors())
   app.use((req, res, next) => {
     res.locals = {
-      auth: !!req.session.user
+      auth: !!req.user
     };
     next()
   });
