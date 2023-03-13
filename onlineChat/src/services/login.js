@@ -6,7 +6,9 @@ const login = async (email, password) => {
     if (user && await bcryptjs.compare(password, user.password)) {
         delete user.password;
         return user;
-    };
+    } else {
+        return void null;
+    }
 };
 
 module.exports = login;

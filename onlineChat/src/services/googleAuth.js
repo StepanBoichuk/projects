@@ -11,7 +11,13 @@ const googleAuth = async (profile) => {
         });
     await googleUser.save();
     return {id:googleUser.id, username:googleUser.username, email:googleUser.email}
-    }
-}
+    } else {
+        if (user.password) {
+            return void null;
+        } else {
+            return user;
+        };
+    };
+};
 
 module.exports = googleAuth;

@@ -72,6 +72,7 @@ const { passportStrategies } = require('./src/services')
   app.use(errors())
   app.use((req, res, next) => {
     res.locals = {
+      message: req.session.message || [],
       auth: !!req.user
     };
     next()
