@@ -6,7 +6,8 @@ const oauthRouter = new Router();
 oauthRouter.get('/redirect/google', passport.authenticate('google', {
     scope: ['profile', 'email'],
     successRedirect: '/',
-    failureRedirect: '/login'
+    failureRedirect: '/login',
+    failureMessage: true
 }));
 
 module.exports = oauthRouter;

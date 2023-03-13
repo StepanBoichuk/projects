@@ -11,7 +11,10 @@ const loginRouter = Router();
 loginRouter.get("/login", async (req, res) => {
   const auth  = req.user;
   if (!auth) {
-    res.render(path.join(__dirname, "..", "..", "views", "pages", "login"), { auth});
+    const message = req.session.messages
+    res.render(path.join(__dirname, "..", "..", "views", "pages", "login"), { auth, message });
+    console.log(req.session.messages)
+    req.session.destroy();
   } else {
     res.redirect('/users');
   };
@@ -26,7 +29,7 @@ loginRouter.post("/login", loginValidation.appValidator, async (req, res, next) 
     req.body.username = email;
 
     passport.authenticate('local', {
-      successReturnToOrRedirect: '/',
+      successRedirect: '/',
       failureRedirect: '/login',
       failureMessage: true,
     }

@@ -24,8 +24,16 @@ const google = new GoogleStrategy({
     callbackURL: config.get('auth.google.callbackURL'),
     scope: ['profile']
 }, async (issuer, profile, cb) => {
-    const user = await googleAuth(profile)
-    cb(null, user)
+    try {
+        const user = await googleAuth(profile)
+        if (!user) {
+            cb(null, false, { message: 'This email is already registred'});
+        } else {
+            cb(null, user);
+        };
+    }catch(e){
+        cb(e)
+    }
 });
 
 passport.serializeUser((user, cb) => {
